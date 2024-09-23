@@ -1,3 +1,16 @@
+var bc = ee.FeatureCollection('FAO/GAUL/2015/level1');
+
+// Filter the boundaries to get the British Columbia province
+var bcBoundary = bc.filter(ee.Filter.eq('ADM1_CODE', 826));
+
+var bounds = bcBoundary.geometry().bounds();
+
+var mask = function(collection) {
+  return collection.map(function(image) {
+    return image.clip(bcBoundary);
+  });
+};
+
 // load era5Daily data
 var era5Daily = mask(ee.ImageCollection("ECMWF/ERA5_LAND/DAILY_AGGR").filter(ee.Filter.date('2020-01-01', '2024-05-01')));
 
